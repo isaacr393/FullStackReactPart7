@@ -3,6 +3,7 @@ import { Switch,
          Route,
          Link, useRouteMatch, useHistory
  } from 'react-router-dom'
+import useInputHook from './hooks/inputHook'
 
 
 const Menu = () => {
@@ -56,23 +57,25 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  const content = useInputHook('text')
+  const info = useInputHook('text')
+  const author = useInputHook('text')
+  
 
   const history =  useHistory()         
 
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
-    setContent('')
-    setAuthor('')
-    setInfo('')
+
+    content.onChange({target:{value:''}, preventDefault: () => {} })
+    author.onChange({target:{value:''}, preventDefault: () => {} })
+    info.onChange({target:{value:''}, preventDefault: () => {} })
     history.push('/')
   }
 
@@ -82,15 +85,15 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input name='content' {...content} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input name='author' {...author} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          <input name='info' {...info} />
         </div>
         <button>create</button>
       </form>
@@ -104,7 +107,7 @@ const Anecdote = ( {anecdote} ) => {
     <div>
       <h3>{anecdote.author}</h3>
       <p>{anecdote.content}</p>
-      <span> {anecdote.votes} </span> - <a href={anecdote.info}>See</a>
+      <span> {anecdote.votes} </span> - <a href={`${anecdote.info}`}>See</a>
     </div>
   )
 }
