@@ -79,6 +79,13 @@ const CreateNew = (props) => {
     history.push('/')
   }
 
+  const handleReset = (e) => {
+    e.preventDefault()
+    content.onChange({target:{value:''}, preventDefault: () => {} })
+    author.onChange({target:{value:''}, preventDefault: () => {} })
+    info.onChange({target:{value:''}, preventDefault: () => {} })
+  }
+
   return (
     <div>
       <h2>create a new anecdote</h2>
@@ -95,7 +102,7 @@ const CreateNew = (props) => {
           url for more info
           <input name='info' {...info} />
         </div>
-        <button>create</button>
+        <button>create</button> <button onClick={handleReset}>reset</button>
       </form>
     </div>
   )
