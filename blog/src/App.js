@@ -89,7 +89,8 @@ const App = () => {
   const handleRemove = async (id) => {
     try {      
       await blogService.remove(id)
-      dispatch( setBlogs( blogs.filter( prevBlog => prevBlog.id !== id  ) ) )
+      let newBlogs = blogs.filter( prevBlog => prevBlog.id !== id  )
+      dispatch( setBlogs( newBlogs ) )
       dispatch( setSuccessMessage('Blog Removed') )
       setTimeout( () => dispatch(setSuccessMessage('')), 5000)
     } catch (err) {
