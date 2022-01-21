@@ -5,21 +5,25 @@ import BlogForm from './BlogForm'
 import Toggable from './Toggable'
 import { useDispatch, useSelector } from 'react-redux'
 import { setSuccessMessage, setErrMessage } from './reducers/MessageReducer'
+import { setBlogs } from './reducers/BlogReducer'
 
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  //const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState('')
+
   const dispatch = useDispatch()
+
   const message = useSelector( state => state.message )
+  const blogs = useSelector ( state => state.blogs )
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      dispatch( setBlogs( blogs ) )
     )  
-  }, [])
+  }, [dispatch])
 
   useEffect( () => {
     let user = window.localStorage.getItem('user')
@@ -61,7 +65,7 @@ const App = () => {
       let response = await blogService.create(blog)
       let newBlog = response
       newBlog.user = user
-      setBlogs([...blogs, newBlog])
+      dispatch( setBlogs([...blogs, newBlog]) )
       dispatch( setSuccessMessage('Blog created Successfully') )
       setTimeout( () => dispatch(setSuccessMessage('')), 5000)
     } catch (err) {
@@ -73,7 +77,7 @@ const App = () => {
   const handleLike = async (blog) =>{
     try {
       let updatedBlog = await blogService.update(blog.id, blog)
-      setBlogs( blogs.map( prevBlog => prevBlog.id === blog.id?updatedBlog:prevBlog  ) )
+      dispatch( setBlogs( blogs.map( prevBlog => prevBlog.id === blog.id?updatedBlog:prevBlog  ) ) )
       dispatch( setSuccessMessage('Blog Liked') )
       setTimeout( () => dispatch(setSuccessMessage('')), 5000)
     } catch (err) {
@@ -85,7 +89,7 @@ const App = () => {
   const handleRemove = async (id) => {
     try {      
       await blogService.remove(id)
-      setBlogs( blogs.filter( prevBlog => prevBlog.id !== id  ) )
+      dispatch( setBlogs( blogs.filter( prevBlog => prevBlog.id !== id  ) ) )
       dispatch( setSuccessMessage('Blog Removed') )
       setTimeout( () => dispatch(setSuccessMessage('')), 5000)
     } catch (err) {

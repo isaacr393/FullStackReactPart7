@@ -10,10 +10,12 @@ const BlogReducer =  ( state = [], action ) => {
 }
 
 export const setBlogs = (blogs) => {
-    return {
-        type: 'LIST_BLOGS',
-        data: blogs
-    }
+    return dispatch =>{
+        return dispatch({
+            type: 'LIST_BLOGS',
+            data: blogs
+        })
+    } 
 }
 
 export default BlogReducer
