@@ -9,7 +9,8 @@ import { setBlogs } from './reducers/BlogReducer'
 import { BrowserRouter as Router,
   Switch,
   Route,
-  Link } from 'react-router-dom'
+  Link,
+  useRouteMatch } from 'react-router-dom'
 
 
 const App = () => {
@@ -138,8 +139,11 @@ const App = () => {
         <span style={{color: 'green'}} >{message.success}</span>
 
         <Switch>
-          <Route path="/user">
+          <Route path="/user" exact>
               <Users  blogs={blogSorted} />
+          </Route>
+          <Route path="/user/:id">
+              <User  blogs={blogSorted} />
           </Route>
           <Route path="/">
             <h2>blogs</h2>
@@ -158,7 +162,7 @@ const Users = ({blogs}) => {
 
   blogs.forEach( blog => {
     if( !users.find( user => user.user === blog.user.user) ){
-      users.push({user: blog.user.user, qty:1})
+      users.push({user: blog.user.user, qty:1, id:blog.user.id})
       return
     }else{
       users.find( user => user.user === blog.user.user).qty++
@@ -169,7 +173,29 @@ const Users = ({blogs}) => {
   return(
     <>
       <h1>Users</h1>
-      {users.map( user => <span  key={user.user} > {user.user}:{user.qty} </span>  )}
+      {users.map( user => <Link to={`/user/${user.id}`} key={user.user} > <span > {user.user}:{user.qty} </span> </Link> )}
+    </>
+  )
+}
+
+const User = ({blogs}) => {
+  const match = useRouteMatch('/user/:id')
+  const blogsOfUser = match
+  ?blogs.filter(blog => blog.user.id === match.params.id)
+  :[]
+  const user = blogsOfUser.length > 0
+  ?blogsOfUser[0].user.user
+  :""
+
+  return(
+    <>
+      <h4>{user}</h4>
+      {blogsOfUser.map(blog => 
+        <div key={blog.title}>
+          <strong>{blog.title}:</strong>
+          <span>{blog.likes}</span>
+        </div> 
+      )}
     </>
   )
 }
