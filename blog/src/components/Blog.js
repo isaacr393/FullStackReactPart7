@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 const Blog = ({blog, handleLike, handleRemove, user}) => {
   const [showDetail, setShowDetail] = useState(false)
@@ -20,7 +21,7 @@ const Blog = ({blog, handleLike, handleRemove, user}) => {
   const detailDisplayStyle = { display: showDetail?'':'none' }
   return(
     <div style={{border:'1px solid black', margin:'10px'}} className="blogContainer">
-      {blog.title}  &nbsp;
+      <Link to={`/blogs/${blog.title}`}> {blog.title} </Link>  &nbsp;
       <button onClick={toggleDetails} className="showDetailsButton" >
         {showDetail?'Hide':'Details'}
       </button>

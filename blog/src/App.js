@@ -145,6 +145,9 @@ const App = () => {
           <Route path="/user/:id">
               <User  blogs={blogSorted} />
           </Route>
+          <Route path="/blogs/:id">
+              <BlogDetail  blogs={blogSorted} />
+          </Route>
           <Route path="/">
             <h2>blogs</h2>
             {blogSorted.map(blog =>
@@ -196,6 +199,25 @@ const User = ({blogs}) => {
           <span>{blog.likes}</span>
         </div> 
       )}
+    </>
+  )
+}
+
+const BlogDetail = ({blogs}) => {
+  const match = useRouteMatch('/blogs/:title')
+  const blog = match
+  ?blogs.find( blog => blog.title === match.params.title)
+  :null
+  
+  if( !blog ){
+    return
+  }
+
+  return(
+    <>
+      <h1><strong> {blog.title}</strong></h1> <br />
+      <span>likes: <strong>{blog.likes}</strong></span> <br />
+      <span>added by: <strong>{blog.author}</strong> </span>
     </>
   )
 }
