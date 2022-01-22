@@ -11,6 +11,9 @@ import { BrowserRouter as Router,
   Route,
   Link,
   useRouteMatch } from 'react-router-dom'
+import Container from '@material-ui/core/Container'
+import { TextField, Button } from '@material-ui/core'
+
 
 
 const App = () => {
@@ -121,6 +124,7 @@ const App = () => {
   const blogSorted = blogs.sort( (prev, current) => current.likes - prev.likes)
   //console.log(user)
   return (
+    <Container>
     <Router>
       <div>      
         <br />
@@ -163,6 +167,7 @@ const App = () => {
         </Switch>        
       </div>
     </Router>
+    </Container>
   )
 }
 
@@ -232,12 +237,17 @@ const LoginForm = ({onSubmit, username, handleUsernameChange, password, handlePa
 
   return (
     <form onSubmit={onSubmit} >
-      <label htmlFor="usernameInput">username</label>
-      <input id="usernameInput" type="text" value={username} onChange={handleUsernameChange} /> <br />
-      <label htmlFor="passwordInput">password</label>
-      <input id='passwordInput' type="text" value={password} onChange={handlePasswordChange} /> <br />
+      {/* <label htmlFor="usernameInput">username</label>
+      <input id="usernameInput" type="text" value={username} onChange={handleUsernameChange} /> <br /> */}
+      <TextField label="username" type="text" onChange={handleUsernameChange} /><br />
+      <TextField label="password" type="password" onChange={handlePasswordChange} /> <br />
+      {/* <label htmlFor="passwordInput">password</label>
+      <input id='passwordInput' type="text" value={password} onChange={handlePasswordChange} /> <br /> */}
 
-      <button onClick={onSubmit}>Log in</button>
+      {/* <button onClick={onSubmit}>Log in</button> */}
+      <Button variant="contained" color="primary" type="submit" onClick={onSubmit}>
+        log in
+      </Button>
     </form>
   )
 }
