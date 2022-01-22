@@ -6,10 +6,13 @@ import Toggable from './Toggable'
 import { useDispatch, useSelector } from 'react-redux'
 import { setSuccessMessage, setErrMessage } from './reducers/MessageReducer'
 import { setBlogs } from './reducers/BlogReducer'
+import { BrowserRouter as Router,
+  Switch,
+  Route,
+  Link } from 'react-router-dom'
 
 
 const App = () => {
-  //const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState('')
@@ -31,6 +34,7 @@ const App = () => {
       let parsedUser = JSON.parse(user)
       setUser(parsedUser)
       blogService.setToken(parsedUser.token)
+      //console.log(user)
     }
   },[])
 
@@ -115,24 +119,60 @@ const App = () => {
 
   const blogSorted = blogs.sort( (prev, current) => current.likes - prev.likes)
   return (
-    <div>      
-      { `${user.user} logged in ` } <button onClick={handleLogout} >logout</button>
-      <br /> <br />
-      <Toggable showVisibilityText='Create Blog' hiddenVisibilityText='Cancel Register'>
-        <BlogForm onSubmit={handleSubmitBlog}/>
-      </Toggable>      
+    <Router>
+      <div>      
+        { `${user.user} logged in ` } <button onClick={handleLogout} >logout</button>
+        <br /> <br />
+        <Link to="/">
+          Blogs
+        </Link> 
+        <Link to="/user">
+          User
+        </Link>
+        <br /> <br />
+        <Toggable showVisibilityText='Create Blog' hiddenVisibilityText='Cancel Register'>
+          <BlogForm onSubmit={handleSubmitBlog}/>
+        </Toggable>      
 
-      <span style={{color: 'red'}} >{message.err}</span>
-      <span style={{color: 'green'}} >{message.success}</span>
+        <span style={{color: 'red'}} >{message.err}</span>
+        <span style={{color: 'green'}} >{message.success}</span>
 
-      <h2>blogs</h2>
-      {blogSorted.map(blog =>
-        <Blog key={blog.id} blog={blog} handleLike={handleLike} handleRemove={handleRemove} user={user}/>
-      )}
-    </div>
+        <Switch>
+          <Route path="/user">
+              <Users  blogs={blogSorted} />
+          </Route>
+          <Route path="/">
+            <h2>blogs</h2>
+            {blogSorted.map(blog =>
+              <Blog key={blog.id} blog={blog} handleLike={handleLike} handleRemove={handleRemove} user={user}/>
+            )}
+          </Route>
+        </Switch>        
+      </div>
+    </Router>
   )
 }
 
+const Users = ({blogs}) => {
+  let users = []
+
+  blogs.forEach( blog => {
+    if( !users.find( user => user.user === blog.user.user) ){
+      users.push({user: blog.user.user, qty:1})
+      return
+    }else{
+      users.find( user => user.user === blog.user.user).qty++
+      return
+    }
+  })
+  //console.log(users)
+  return(
+    <>
+      <h1>Users</h1>
+      {users.map( user => <span  key={user.user} > {user.user}:{user.qty} </span>  )}
+    </>
+  )
+}
 
 const LoginForm = ({onSubmit, username, handleUsernameChange, password, handlePasswordChange}) => {
 
