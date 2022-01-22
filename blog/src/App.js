@@ -119,18 +119,24 @@ const App = () => {
   }
 
   const blogSorted = blogs.sort( (prev, current) => current.likes - prev.likes)
+  //console.log(user)
   return (
     <Router>
       <div>      
-        { `${user.user} logged in ` } <button onClick={handleLogout} >logout</button>
-        <br /> <br />
-        <Link to="/">
-          Blogs
-        </Link> 
-        <Link to="/user">
-          User
-        </Link>
-        <br /> <br />
+        <br />
+        <div style={{display:'flex', justifyContent:'flex-end'}}>
+          <Link to="/" style={{margin:'10px'}}>
+            Blogs
+          </Link> 
+          <Link to="/user" style={{margin:'10px'}}>
+            User
+          </Link>
+          <Link to={`/user/${user.id}`} style={{margin:'10px'}}>
+            {user.user}
+          </Link>
+          <button onClick={handleLogout} >logout</button>
+        </div>
+         <br />
         <Toggable showVisibilityText='Create Blog' hiddenVisibilityText='Cancel Register'>
           <BlogForm onSubmit={handleSubmitBlog}/>
         </Toggable>      
